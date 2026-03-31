@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 
 export default async function PageDetail({
@@ -7,7 +7,7 @@ export default async function PageDetail({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const { data: page } = await supabaseAdmin
+  const { data: page } = await supabase
     .from("pages")
     .select("id, name")
     .eq("id", id)
