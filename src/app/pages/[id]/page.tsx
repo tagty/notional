@@ -1,4 +1,4 @@
-import { mockPages } from "@/lib/mock-data";
+import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 
 export default async function PageDetail({
@@ -7,7 +7,11 @@ export default async function PageDetail({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const page = mockPages.find((p) => p.id === id);
+  const { data: page } = await supabase
+    .from("pages")
+    .select("id, name")
+    .eq("id", id)
+    .single();
 
   if (!page) notFound();
 

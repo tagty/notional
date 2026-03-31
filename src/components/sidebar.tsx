@@ -1,30 +1,32 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
-import { mockPages } from "@/lib/mock-data";
-import { Plus } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { NewPageButton } from "@/components/new-page-button";
 
-export function Sidebar() {
-  const pathname = usePathname();
+async function getPages() {
+  const { data } = await supabase
+    .from("pages")
+    .select("id, name")
+    .order("created_at");
+  return data ?? [];
+}
+
+export async function Sidebar({ currentPageId }: { currentPageId?: string }) {
+  const pages = await getPages();
 
   return (
     <aside className="flex h-full w-60 flex-col border-r bg-muted/40 px-2 py-4">
-      <Button variant="ghost" className="w-full justify-start gap-2">
-        <Plus className="h-4 w-4" />
-        新規ページ
-      </Button>
+      <NewPageButton />
       <div className="mt-2 flex flex-col gap-0.5">
-        {mockPages.map((page) => (
+        {pages.map((page) => (
           <Link
             key={page.id}
             href={`/pages/${page.id}`}
             className={cn(
               buttonVariants({ variant: "ghost" }),
               "w-full justify-start",
-              pathname === `/pages/${page.id}` && "bg-accent"
+              currentPageId === page.id && "bg-accent"
             )}
           >
             {page.name}
