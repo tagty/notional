@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase";
 import { NewPageButton } from "@/components/new-page-button";
 
 async function getPages() {
-  const { data } = await supabase
+  const { data } = await supabaseAdmin
     .from("pages")
     .select("id, name")
     .order("created_at");
